@@ -3,9 +3,9 @@ import axios from "axios";
 import { apiBaseUrl } from '../../constants';
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
-
+import { useStateValue } from "../../state";
 import { TextField, SelectField2, DiagnosisSelection } from "../../AddPatientModal/FormField";
-import { Gender, HealthCheckEntry, HealthCheckRating } from "../../types";
+import { HealthCheckEntry, HealthCheckRating } from "../../types";
 import { Diagnosis } from '../../types';
 
 
@@ -30,12 +30,7 @@ interface Props {
   export type EntryFormValues = Omit<HealthCheckEntry, "id">;
 
 const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
-  const [diagnosis, setDiagnosis] = useState<Diagnosis[] | []>([]);
-
-  useEffect(() => {
-    axios.get(`${apiBaseUrl}/diagnosis`)
-    .then(val => setDiagnosis(val.data))
-  }, [])
+  const [{ diagnosis }] = useStateValue()
 
   return (
     <Formik
@@ -75,7 +70,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               name="rating"
               options={ratingOptions}
             />
-            <DiagnosisSelection diagnoses={diagnosis} setFieldTouched={setFieldTouched} setFieldValue={setFieldValue} />
+            <DiagnosisSelection diagnoses={Object.values(diagnosis)} setFieldTouched={setFieldTouched} setFieldValue={setFieldValue} />
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">

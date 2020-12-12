@@ -2,6 +2,7 @@ import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
 import { Diagnosis, Gender } from "../types";
+import { ratingOptions } from '../components/HealthCheckEntry/AddEntryForm';
 
 // structure of a single option
 export type GenderOption = {
@@ -15,6 +16,30 @@ type SelectFieldProps = {
   label: string;
   options: GenderOption[];
 };
+
+type SelectField2Props = {
+  name: string;
+  label: string;
+  options: ratingOptions[];
+};
+
+
+export const SelectField2: React.FC<SelectField2Props> = ({
+  name,
+  label,
+  options
+}: SelectField2Props) => (
+  <Form.Field>
+    <label>{label}</label>
+    <Field as="select" name={name} className="ui dropdown">
+      {options.map(option => (
+        <option key={option.value} value={option.value}>
+          {option.label || option.value}
+        </option>
+      ))}
+    </Field>
+  </Form.Field>
+);
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   name,

@@ -5,10 +5,25 @@ import { Patient } from '../types';
 import { Card } from 'semantic-ui-react'
 import { apiBaseUrl } from "../constants";
 import EntryPage from './EntryPage';
+import { EntryFormValues } from './HealthCheckEntry/AddEntryForm';
+import HealthCheckWrapper from './HealthCheckEntry/EntryFormWrapper';
 
 const PatientPage: React.FC = () => {
   const params = useParams<{id: string}>();
   const [patient, setPatient] = useState<Patient | undefined>();
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    console.log(values);
+    try {
+      const { data: updatedPatient } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients`,
+        values
+      );
+      console.log(updatedPatient)
+    } catch (e) {
+      console.error(e.response.data);
+    }
+  };
 
   useEffect(() => {
     axios.get<Patient>(`${apiBaseUrl}/patients/${params.id}`)
@@ -18,6 +33,7 @@ const PatientPage: React.FC = () => {
   return (
     <div className="App">
         {patient && (
+          <>
             <Card>
             <Card.Content>
               <Card.Header>Name: {patient.name}</Card.Header>
@@ -29,6 +45,8 @@ const PatientPage: React.FC = () => {
               </Card.Description>
             </Card.Content>
           </Card>
+          <HealthCheckWrapper id={params.id} onSubmit={submitNewEntry} />
+          </>
         )}
     </div>
   );

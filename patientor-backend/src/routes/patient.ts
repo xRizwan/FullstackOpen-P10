@@ -28,4 +28,14 @@ router.post('/', (req, res) => {
   }
 });
 
+router.post('/:id/entries', (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedPatient = patientService.findByIdAndUpdate(id, req.body.entry);
+    res.json(updatedPatient);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
+});
+
 export default router;
